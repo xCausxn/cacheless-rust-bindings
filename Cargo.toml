@@ -4,5 +4,5 @@ version = "2026.3.11"
 edition = "2024"
 
 [dependencies]
-spacetimedb-sdk = { git = "https://github.com/xCausxn/cacheless-rust-bindings", branch = "sdk" }
+spacetimedb-sdk = { git = "https://github.com/xCausxn/cacheless-rust-bindings", branch = "sdk-rustls" }
 tokio = { version = "1.47.1", features = ["sync"] }
