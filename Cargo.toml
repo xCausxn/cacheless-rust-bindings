@@ -112,7 +112,7 @@ features = ["full"]
 [dependencies.tokio-tungstenite]
 version = "0.27.0"
 features = [
-    "native-tls",
+    "rustls-tls-webpki-roots",
     "url",
 ]
 
