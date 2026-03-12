@@ -106,7 +106,7 @@ checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
 name = "bindings"
-version = "2026.2.26"
+version = "2026.3.11"
 dependencies = [
  "spacetimedb-sdk",
  "tokio",
@@ -1814,7 +1814,7 @@ dependencies = [
 [[package]]
 name = "spacetimedb-sdk"
 version = "1.12.0"
-source = "git+https://github.com/BitCraftToolBox/cacheless-rust-bindings?branch=sdk#83ce7ead6ef502b5ec263784da00111f64edb9fa"
+source = "git+https://github.com/xCausxn/cacheless-rust-bindings?branch=sdk#2aa5349cd8d96a5b10c21472e800139b19c6b450"
 dependencies = [
  "anymap",
  "base64 0.21.7",
