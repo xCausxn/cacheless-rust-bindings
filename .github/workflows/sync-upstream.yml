@@ -1,0 +1,42 @@
+name: Sync from upstream
+
+on:
+  schedule:
+    # Run every evening at 8 PM UTC
+    - cron: "0 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [main, xCausxn]
+    steps:
+      - name: Checkout ${{ matrix.branch }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+          fetch-depth: 0
+
+      - name: Add upstream remote
+        run: git remote add upstream https://github.com/BitCraftToolBox/cacheless-rust-bindings.git
+
+      - name: Fetch upstream
+        run: git fetch upstream
+
+      - name: Merge upstream changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git merge upstream/${{ matrix.branch }} --no-edit || {
+            echo "::error::Merge conflict detected on ${{ matrix.branch }}. Manual resolution required."
+            git merge --abort
+            exit 1
+          }
+
+      - name: Push changes
+        run: git push origin ${{ matrix.branch }}
