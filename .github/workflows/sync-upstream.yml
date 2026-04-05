@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git merge upstream/${{ matrix.branch }} --no-edit || {
+          git merge upstream/main --no-edit || {
             echo "::error::Merge conflict detected on ${{ matrix.branch }}. Manual resolution required."
             git merge --abort
             exit 1
