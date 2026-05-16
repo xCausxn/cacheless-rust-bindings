@@ -267,14 +267,15 @@ impl<Row: DeserializeOwned + Debug> TableUpdate<Row> {
         let parsed = bsatn::from_slice::<Row>(&bytes).map_err(|source| {
             InternalError::failed_parse(std::any::type_name::<Row>(), "row data").with_cause(source)
         })?;
-        // Drop the wire `Bytes` ref instead of carrying it in `WithBsatn`.
-        // Some `BsatnRowList` row-buffer paths can produce aliasing refcounts
-        // that cause a double-free when dropped through the cacheless channel
-        // path (the cache path masks the bug by cloning each `Bytes` as a key).
-        // Channel-mode callers don't read `.bsatn` — the parsed `row` is owned.
-        let _ = bytes;
+        // Deep-copy into a fresh `Bytes` allocation per row. The wire `Bytes`
+        // from `BsatnRowList`'s row iterator shares a parent refcount with
+        // sibling rows; carrying that shared ref into `WithBsatn` caused a
+        // double-free in channel mode at user-task drop boundaries. The cache
+        // path needs a non-empty `bsatn` (HashMap<Bytes, RowEntry> keys), so
+        // we can't just empty it. An independent allocation per row breaks the
+        // aliasing and keeps the bytes available as a cache key.
         Ok(WithBsatn {
-            bsatn: Bytes::new(),
+            bsatn: Bytes::copy_from_slice(&bytes),
             row: parsed,
         })
     }
