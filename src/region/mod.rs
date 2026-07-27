@@ -88,6 +88,7 @@ pub mod admin_insert_resource_growth_timer_reducer;
 pub mod admin_migrate_action_state_reducer;
 pub mod admin_migrate_deployable_state_v_2_reducer;
 pub mod admin_migrate_trade_orders_reducer;
+pub mod admin_migrate_traveler_tasks_reducer;
 pub mod admin_modify_chat_message_reducer;
 pub mod admin_patch_housing_costs_reducer;
 pub mod admin_remove_collectible_reducer;
@@ -106,6 +107,8 @@ pub mod admin_resource_force_regen_reducer;
 pub mod admin_resources_delete_percentage_reducer;
 pub mod admin_resources_delete_very_slow_reducer;
 pub mod admin_resources_log_count_reducer;
+pub mod admin_respawn_building_spawn_desc_reducer;
+pub mod admin_respawn_interior_spawn_desc_reducer;
 pub mod admin_restore_all_buildings_health_reducer;
 pub mod admin_restore_all_collapsed_ruins_reducer;
 pub mod admin_restore_player_state_reducer;
@@ -2202,6 +2205,10 @@ pub use admin_migrate_trade_orders_reducer::{
     admin_migrate_trade_orders, set_flags_for_admin_migrate_trade_orders,
     AdminMigrateTradeOrdersCallbackId,
 };
+pub use admin_migrate_traveler_tasks_reducer::{
+    admin_migrate_traveler_tasks, set_flags_for_admin_migrate_traveler_tasks,
+    AdminMigrateTravelerTasksCallbackId,
+};
 pub use admin_modify_chat_message_reducer::{
     admin_modify_chat_message, set_flags_for_admin_modify_chat_message,
     AdminModifyChatMessageCallbackId,
@@ -2270,6 +2277,14 @@ pub use admin_resources_delete_very_slow_reducer::{
 pub use admin_resources_log_count_reducer::{
     admin_resources_log_count, set_flags_for_admin_resources_log_count,
     AdminResourcesLogCountCallbackId,
+};
+pub use admin_respawn_building_spawn_desc_reducer::{
+    admin_respawn_building_spawn_desc, set_flags_for_admin_respawn_building_spawn_desc,
+    AdminRespawnBuildingSpawnDescCallbackId,
+};
+pub use admin_respawn_interior_spawn_desc_reducer::{
+    admin_respawn_interior_spawn_desc, set_flags_for_admin_respawn_interior_spawn_desc,
+    AdminRespawnInteriorSpawnDescCallbackId,
 };
 pub use admin_restore_all_buildings_health_reducer::{
     admin_restore_all_buildings_health, set_flags_for_admin_restore_all_buildings_health,
@@ -5935,6 +5950,7 @@ pub enum Reducer {
     AdminMigrateActionState,
     AdminMigrateDeployableStateV2,
     AdminMigrateTradeOrders,
+    AdminMigrateTravelerTasks,
     AdminModifyChatMessage {
         entity_id: u64,
         new_message_text: String,
@@ -5996,6 +6012,14 @@ pub enum Reducer {
     },
     AdminResourcesLogCount {
         threshold: f32,
+    },
+    AdminRespawnBuildingSpawnDesc {
+        building_spawn_desc_id: i32,
+        commit: bool,
+    },
+    AdminRespawnInteriorSpawnDesc {
+        interior_spawn_desc_id: i32,
+        commit: bool,
     },
     AdminRestoreAllBuildingsHealth,
     AdminRestoreAllCollapsedRuins,
@@ -8153,6 +8177,7 @@ impl __sdk::Reducer for Reducer {
             Reducer::AdminMigrateActionState => "admin_migrate_action_state",
             Reducer::AdminMigrateDeployableStateV2 => "admin_migrate_deployable_state_v2",
             Reducer::AdminMigrateTradeOrders => "admin_migrate_trade_orders",
+            Reducer::AdminMigrateTravelerTasks => "admin_migrate_traveler_tasks",
             Reducer::AdminModifyChatMessage { .. } => "admin_modify_chat_message",
             Reducer::AdminPatchHousingCosts => "admin_patch_housing_costs",
             Reducer::AdminRemoveCollectible { .. } => "admin_remove_collectible",
@@ -8171,6 +8196,8 @@ impl __sdk::Reducer for Reducer {
             Reducer::AdminResourcesDeletePercentage { .. } => "admin_resources_delete_percentage",
             Reducer::AdminResourcesDeleteVerySlow { .. } => "admin_resources_delete_very_slow",
             Reducer::AdminResourcesLogCount { .. } => "admin_resources_log_count",
+            Reducer::AdminRespawnBuildingSpawnDesc { .. } => "admin_respawn_building_spawn_desc",
+            Reducer::AdminRespawnInteriorSpawnDesc { .. } => "admin_respawn_interior_spawn_desc",
             Reducer::AdminRestoreAllBuildingsHealth => "admin_restore_all_buildings_health",
             Reducer::AdminRestoreAllCollapsedRuins => "admin_restore_all_collapsed_ruins",
             Reducer::AdminRestorePlayerState { .. } => "admin_restore_player_state",
@@ -8986,6 +9013,7 @@ impl TryFrom<__ws::ReducerCallInfo<__ws::BsatnFormat>> for Reducer {
             "admin_migrate_action_state" => Ok(__sdk::parse_reducer_args::<admin_migrate_action_state_reducer::AdminMigrateActionStateArgs>("admin_migrate_action_state", &value.args)?.into()),
             "admin_migrate_deployable_state_v2" => Ok(__sdk::parse_reducer_args::<admin_migrate_deployable_state_v_2_reducer::AdminMigrateDeployableStateV2Args>("admin_migrate_deployable_state_v2", &value.args)?.into()),
             "admin_migrate_trade_orders" => Ok(__sdk::parse_reducer_args::<admin_migrate_trade_orders_reducer::AdminMigrateTradeOrdersArgs>("admin_migrate_trade_orders", &value.args)?.into()),
+            "admin_migrate_traveler_tasks" => Ok(__sdk::parse_reducer_args::<admin_migrate_traveler_tasks_reducer::AdminMigrateTravelerTasksArgs>("admin_migrate_traveler_tasks", &value.args)?.into()),
             "admin_modify_chat_message" => Ok(__sdk::parse_reducer_args::<admin_modify_chat_message_reducer::AdminModifyChatMessageArgs>("admin_modify_chat_message", &value.args)?.into()),
             "admin_patch_housing_costs" => Ok(__sdk::parse_reducer_args::<admin_patch_housing_costs_reducer::AdminPatchHousingCostsArgs>("admin_patch_housing_costs", &value.args)?.into()),
             "admin_remove_collectible" => Ok(__sdk::parse_reducer_args::<admin_remove_collectible_reducer::AdminRemoveCollectibleArgs>("admin_remove_collectible", &value.args)?.into()),
@@ -9004,6 +9032,8 @@ impl TryFrom<__ws::ReducerCallInfo<__ws::BsatnFormat>> for Reducer {
             "admin_resources_delete_percentage" => Ok(__sdk::parse_reducer_args::<admin_resources_delete_percentage_reducer::AdminResourcesDeletePercentageArgs>("admin_resources_delete_percentage", &value.args)?.into()),
             "admin_resources_delete_very_slow" => Ok(__sdk::parse_reducer_args::<admin_resources_delete_very_slow_reducer::AdminResourcesDeleteVerySlowArgs>("admin_resources_delete_very_slow", &value.args)?.into()),
             "admin_resources_log_count" => Ok(__sdk::parse_reducer_args::<admin_resources_log_count_reducer::AdminResourcesLogCountArgs>("admin_resources_log_count", &value.args)?.into()),
+            "admin_respawn_building_spawn_desc" => Ok(__sdk::parse_reducer_args::<admin_respawn_building_spawn_desc_reducer::AdminRespawnBuildingSpawnDescArgs>("admin_respawn_building_spawn_desc", &value.args)?.into()),
+            "admin_respawn_interior_spawn_desc" => Ok(__sdk::parse_reducer_args::<admin_respawn_interior_spawn_desc_reducer::AdminRespawnInteriorSpawnDescArgs>("admin_respawn_interior_spawn_desc", &value.args)?.into()),
             "admin_restore_all_buildings_health" => Ok(__sdk::parse_reducer_args::<admin_restore_all_buildings_health_reducer::AdminRestoreAllBuildingsHealthArgs>("admin_restore_all_buildings_health", &value.args)?.into()),
             "admin_restore_all_collapsed_ruins" => Ok(__sdk::parse_reducer_args::<admin_restore_all_collapsed_ruins_reducer::AdminRestoreAllCollapsedRuinsArgs>("admin_restore_all_collapsed_ruins", &value.args)?.into()),
             "admin_restore_player_state" => Ok(__sdk::parse_reducer_args::<admin_restore_player_state_reducer::AdminRestorePlayerStateArgs>("admin_restore_player_state", &value.args)?.into()),
