@@ -6214,7 +6214,8 @@ pub struct DbUpdate {
     pub inter_module_message_v_3: __sdk::TableUpdate<InterModuleMessageV3>,
     pub inter_module_message_v_4: __sdk::TableUpdate<InterModuleMessageV4>,
     pub inter_module_message_v_5: __sdk::TableUpdate<InterModuleMessageV5>,
-    pub inter_module_response_message_counter: __sdk::TableUpdate<InterModuleResponseMessageCounter>,
+    pub inter_module_response_message_counter:
+        __sdk::TableUpdate<InterModuleResponseMessageCounter>,
     pub interior_collapse_trigger_state: __sdk::TableUpdate<InteriorCollapseTriggerState>,
     pub interior_environment_desc: __sdk::TableUpdate<InteriorEnvironmentDesc>,
     pub interior_instance_desc: __sdk::TableUpdate<InteriorInstanceDesc>,
@@ -6355,7 +6356,8 @@ pub struct DbUpdate {
     pub resource_placement_recipe_desc: __sdk::TableUpdate<ResourcePlacementRecipeDesc>,
     pub resource_placement_recipe_discovery_cargo_desc: __sdk::TableUpdate<DiscoveryTriggerDesc>,
     pub resource_placement_recipe_discovery_item_desc: __sdk::TableUpdate<DiscoveryTriggerDesc>,
-    pub resource_placement_recipe_discovery_knowledge_desc: __sdk::TableUpdate<DiscoveryTriggerDesc>,
+    pub resource_placement_recipe_discovery_knowledge_desc:
+        __sdk::TableUpdate<DiscoveryTriggerDesc>,
     pub resource_state: __sdk::TableUpdate<ResourceState>,
     pub rez_sick_long_term_state: __sdk::TableUpdate<RezSickLongTermState>,
     pub satiation_state: __sdk::TableUpdate<SatiationState>,
